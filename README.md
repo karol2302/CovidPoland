@@ -1,1 +1,2 @@
-# Covid Poland application - client Rest API
+# CovidPoland
+CovidPoland android application with client Rest API
