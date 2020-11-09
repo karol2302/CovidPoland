@@ -6,7 +6,14 @@ import android.os.Bundle;
 
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.View.OnClickListener;
@@ -24,6 +31,8 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,10 +40,11 @@ public class MainActivity extends AppCompatActivity {
     TextView txt2;
     private String jsonResponse;
 
-    private String urlJsonObj = "https://coronavirus-19-api.herokuapp.com/countries/Poland";
+    private String urlJsonObj = "https://coronavirus-19-api.herokuapp.com/countries/";
 
     private RequestQueue rq;
 
+    private String country = "Poland";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,14 +77,34 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                GetData();
+                GetData(country);
+            }
+        });
+        Spinner spinner = findViewById(R.id.spinner1);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.countries, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?>arg0, View view, int arg2, long arg3) {
+                String selected_val=arg0.getSelectedItem().toString();
+                GetData(selected_val);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                // TODO Auto-generated method stub
+
             }
         });
 
-        GetData();
+
+
+        GetData(country);
    }
 
-    private void GetData()
+    private void GetData(String country)
     {
         rq = Volley.newRequestQueue(MainActivity.this);
 
@@ -83,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.LENGTH_LONG).show();
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Method.GET,
-                urlJsonObj, null, new Response.Listener<JSONObject>() {
+                urlJsonObj + country, null, new Response.Listener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
@@ -98,10 +128,10 @@ public class MainActivity extends AppCompatActivity {
                     jsonResponse += "Dzisiaj umarło : " + tddeaths + "\n\n";
                     jsonResponse += "Ogółem przypadków : " + response.getString("cases") + "\n\n";
                     jsonResponse += "Ogółem zgonów : " + response.getString("deaths") + "\n\n";
-                    jsonResponse += "Ilość w krytycznym stanie : " + response.getString("critical") + "\n\n";
+                    jsonResponse += "Ilość w krytycznym stanie : " + response.getString("critical") + "\n";
                     txt1.setText(jsonResponse);
-                    txt2.setText("Przeprowadzonych testów : " + response.getString("totalTests") + "\n\n"
-                            + "Ozdrowieńców : " + response.getString("recovered") + "\n\n");
+                    txt2.setText("Przeprowadzonych testów : " + response.getString("totalTests") + "\n"
+                            + "Ozdrowieńców : " + response.getString("recovered") + "\n");
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(),

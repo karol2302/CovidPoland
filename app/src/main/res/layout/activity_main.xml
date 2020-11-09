@@ -14,6 +14,18 @@
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/covid19virus" />
 
+
+    <Spinner
+        android:id="@+id/spinner1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="#666">
+
+    </Spinner>
     <TextView
         android:id="@+id/txtView1"
         android:layout_width="wrap_content"
